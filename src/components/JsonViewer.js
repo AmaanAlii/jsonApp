@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-// import ReactJson from "react-json-view";
 import PaginationLoader from "./PaginationLoader";
 import ReactJsonView from "@microlink/react-json-view";
 
 function JsonViewer({ data, setData }) {
   const [displayedData, setDisplayedData] = useState([]);
-  const chunkSize = 10;
+  const chunkSize = 100;
 
   useEffect(() => {
     if (data) {
@@ -22,16 +21,30 @@ function JsonViewer({ data, setData }) {
   }, [displayedData, data]);
 
   const handleEdit = (edit) => {
-    setData(edit.updated_src);
+    const updatedSrc = edit.updated_src;
+    const editedId = updatedSrc.id;
+
+    const updatedData = data.map((item) =>
+      item.id === editedId ? updatedSrc : item
+    );
+
+    setData(updatedData);
   };
 
   const handleAdd = (add) => {
-    setData(add.updated_src);
+    const updatedSrc = add.updated_src;
+    const editedId = updatedSrc.id;
+
+    const updatedData = data.map((item) =>
+      item.id === editedId ? updatedSrc : item
+    );
+
+    setData(updatedData);
   };
 
   return (
     <div className="text-sm">
-      {displayedData.map((chunk, index) => (
+      {displayedData?.map((chunk, index) => (
         <ReactJsonView
           key={index}
           src={chunk}
@@ -43,7 +56,8 @@ function JsonViewer({ data, setData }) {
           style={{ backgroundColor: "#2d2d2d", marginBottom: "10px" }}
         />
       ))}
-      <PaginationLoader onLoadMore={loadMoreData} />
+      {/* Uncomment PaginationLoader if you implement infinite scroll */}
+      {/* <PaginationLoader onLoadMore={loadMoreData} /> */}
     </div>
   );
 }

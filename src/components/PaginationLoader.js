@@ -3,11 +3,12 @@ import React, { useEffect } from "react";
 function PaginationLoader({ onLoadMore }) {
   useEffect(() => {
     const handleScroll = () => {
+      console.log("handlescroll called");
       const scrollTop = document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      if (scrollTop + windowHeight >= documentHeight - 200) {
+      if (scrollTop + windowHeight >= documentHeight - 500) {
         onLoadMore();
       }
     };

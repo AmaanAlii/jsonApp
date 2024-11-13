@@ -1,49 +1,34 @@
-import React, { useState } from "react";
-import { renderAsHTML, renderAsMarkdown } from "../utils/rendererUtils";
+import React from "react";
+import { Link } from "react-router-dom";
+import { internalRoutes } from "../utils/internalRoutes";
+// import { renderAsHTML, renderAsMarkdown } from "../utils/rendererUtils";
 
-function Renderer({ data }) {
-  const [renderType, setRenderType] = useState("html");
-  const [output, setOutput] = useState("");
+function Renderer({ renderedDataState }) {
+  //   const [renderType, setRenderType] = useState("html");
+  //   const [output, setOutput] = useState("");
 
-  const handleRender = () => {
-    if (renderType === "html") {
-      setOutput(renderAsHTML(data));
-    } else if (renderType === "markdown") {
-      setOutput(renderAsMarkdown(data));
-    }
-  };
+  //   console.log("renderedDataState:", renderedDataState);
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center space-x-2">
-        <label>
-          <input
-            type="radio"
-            value="html"
-            checked={renderType === "html"}
-            onChange={() => setRenderType("html")}
-          />
-          HTML
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="markdown"
-            checked={renderType === "markdown"}
-            onChange={() => setRenderType("markdown")}
-          />
-          Markdown
-        </label>
-      </div>
-      <button
-        onClick={handleRender}
-        className="w-full p-2 bg-green-600 rounded hover:bg-green-500"
-      >
-        Render
-      </button>
-      {output && (
-        <div className="p-4 bg-gray-800 rounded mt-2">
-          <pre className="text-white whitespace-pre-wrap">{output}</pre>
+    <div className=" w-full flex flex-col justify-center items-center bg-gray-800 space-y-2">
+      {renderedDataState ? (
+        <div className="p-4  rounded mt-2">
+          <pre className="text-white whitespace-pre-wrap flex flex-col justify-start items-start gap-5 ">
+            {renderedDataState}
+          </pre>
+        </div>
+      ) : (
+        <div>
+          <h1>There seems to be a problem in rendering the JSON data.</h1>
+          <h2>
+            Please try again from the{" "}
+            <Link
+              to={internalRoutes.home}
+              className=" bg-blue-500 text-white py-1 px-2 rounded-md font-semibold hover:bg-blue-600"
+            >
+              Home Page
+            </Link>
+          </h2>
         </div>
       )}
     </div>

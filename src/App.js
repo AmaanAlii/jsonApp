@@ -1,38 +1,41 @@
 import React, { useState } from "react";
-import ApiInput from "./components/ApiInput";
-import JsonViewer from "./components/JsonViewer";
-import Renderer from "./components/Renderer";
-import ErrorMessage from "./components/ErrorMessage";
-import { fetchData } from "./utils/api";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import { internalRoutes } from "./utils/internalRoutes";
+import RenderedPage from "./pages/RenderedPage";
 
 function App() {
-  const [jsonData, setJsonData] = useState([]);
-  const [error, setError] = useState(null);
-
-  const handleFetch = async (endpoint) => {
-    try {
-      setError(null); // Clear previous error
-      const data = await fetchData(endpoint);
-      setJsonData(data);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
+  const [dataToBeRendered, setDataToBeRendered] = useState(null);
+  const [jsonData, setJsonData] = useState(null);
+  const [renderType, setRenderType] = useState("html");
   return (
     <div className="flex h-screen">
-      <div className="w-1/2 overflow-y-auto bg-gray-800 p-4">
-        {jsonData.length > 0 ? (
-          <JsonViewer data={jsonData} setData={setJsonData} />
-        ) : (
-          <p className="text-white">No data to display</p>
-        )}
-      </div>
-      <div className="w-1/2 p-4 space-y-4 bg-gray-900 text-white">
-        <ApiInput onFetch={handleFetch} />
-        {jsonData.length > 0 && <Renderer data={jsonData} />}
-        {error && <ErrorMessage message={error} />}
-      </div>
+      <Router>
+        <Routes>
+          <Route
+            element={
+              <Home
+                renderType={renderType}
+                setJsonData={setJsonData}
+                jsonData={jsonData}
+                setRenderType={setRenderType}
+                renderedDataState={dataToBeRendered}
+                renderedDataSetter={setDataToBeRendered}
+              />
+            }
+            path={internalRoutes.home}
+          />
+          <Route
+            element={
+              <RenderedPage
+                renderType={renderType}
+                renderedDataState={dataToBeRendered}
+              />
+            }
+            path={internalRoutes.renderedPage}
+          />
+        </Routes>
+      </Router>
     </div>
   );
 }
